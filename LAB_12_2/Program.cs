@@ -83,20 +83,24 @@ namespace LAB_12_2
         static MyHashTable<Car> CreateHashTable(int size) //Функция для создания хэш-таблицы
         {
             MyHashTable<Car> table = new MyHashTable<Car>(size, 1); //Инициализация таблицы
-            Car carDouble = new Car("1", 2000, "1", 1, 1, 1); //Cоздаём машину, которая дублируется
+            Car carWithSameHashCodeOne = new Car("1", 2000, "1", 1, 1, 1); //Cоздаём две машины с одинаковым хэш-кодом (хэш-код будет 2101)
+            Car carWithSameHashCodeTwo = new Car("1", 2000, "1", 0, 2, 1);
+            //Хэш-коды считаются по формуле Brend[0] + Year + Colour[0] + Cost + Clearance + id.Number
+            //Хэш-коды равны, так как: 49 + 2000 + 49 + 1 + 1 + 1 = 49 + 2000 + 49 + 0 + 2 + 1 = 2101
+            //Так как индексы считаются по формуле Math.Abs(hashCode) % Capacity, то так как хэш-коды одинаковые и вместимость тоже, то индексы тоже будут одинаковы
             if (size >= 2) //Случай, когда размер таблицы >= 2
             {
-                table.AddItem(carDouble); //carDouble нужен для того, чтобы добавить этот элемент два раза. Это нужно для того, чтобы было проще продемонстрировать удаление и поиск одинаковых элементов
+                table.AddItem(carWithSameHashCodeOne); //carDouble нужен для того, чтобы добавить этот элемент два раза. Это нужно для того, чтобы было проще продемонстрировать удаление и поиск одинаковых элементов
                 while (table.Count != size - 1) //Заполняем таблицу, оставляя только одно свободное место для дублируемого элемента
                 {
                     Car car = CreateCarWithRandomType(); //Создаём машину
                     table.AddItem(car); //Добавляем машину
                 }
-                table.AddItem(carDouble); //Добавляем последнюю продублированную машину
+                table.AddItem(carWithSameHashCodeTwo); //Добавляем последнюю продублированную машину
             }
             else if (size == 1) //Если же длина хэш-таблицы равна 1, то просто один элемент добавляем
             {
-                table.AddItem(carDouble);
+                table.AddItem(carWithSameHashCodeOne);
             }
             return table; //Возвращаем сформированную таблицу
         }
@@ -249,11 +253,11 @@ namespace LAB_12_2
                     case 4:
                         {
                             Console.Clear();
-                            if (table.Count != 0)
+                            if (table.Count != 0) //Проверка на пустоту таблицы
                             {
-                                Car carToSearch = TakeCarInformation(table);
-                                int index = table.FindItem(carToSearch);
-                                if (index == -1)
+                                Car carToSearch = TakeCarInformation(table);//Определяем машину для поиска
+                                int index = table.FindItem(carToSearch);//По машине определяем её индекс в таблице
+                                if (index == -1) //Выводим: нашли элемент или нет
                                 {
                                     Console.ForegroundColor = ConsoleColor.Red;
                                     Console.WriteLine("\nЭлемент не найден");
@@ -281,21 +285,21 @@ namespace LAB_12_2
                             Console.ResetColor();
                             table.Print();
                             Console.WriteLine();
-                            if (table.Count != 0)
+                            if (table.Count != 0) //Проверка на пустоту таблицы
                             {
                                 Console.ForegroundColor = ConsoleColor.Red;
                                 Console.WriteLine("\nДобавляемый элемент: ");
                                 Console.ResetColor();
-                                Car carToAdd = CreateCarWithRandomType();
-                                carToAdd.Brend = $"Добавляемая_Машина_{numberCar}";
+                                Car carToAdd = CreateCarWithRandomType(); //Создаём случайную машину
+                                carToAdd.Brend = $"Добавляемая_Машина_{numberCar}"; //Меняем бренд на более узнаваемый
                                 Console.WriteLine(carToAdd.ToString());
                                 Console.WriteLine();
                                 numberCar += 1;
                                 try
                                 {
-                                    table.AddItem(carToAdd);
+                                    table.AddItem(carToAdd); //Добавляем машину
                                 }
-                                catch (Exception ex)
+                                catch (Exception ex) //На случай полной таблицы
                                 {
                                     Console.ForegroundColor = ConsoleColor.Red;
                                     Console.WriteLine($"{ex.Message}");

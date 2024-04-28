@@ -332,7 +332,7 @@ namespace ClassLibrary1
 
         public virtual object GetHashCode()
         {
-            return Brend[0] + Year + Colour[0] + Cost + clearance + id.number;
+            return Brend[0] + Year + Colour[0] + Cost + Clearance + id.Number;
         }
 
         public object ShallowCopy() //Метод поверхностного копирования для интерфейса ICloneable
