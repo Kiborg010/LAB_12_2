@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace LAB_12_2
 {
@@ -174,6 +175,14 @@ namespace LAB_12_2
 
         public void AddItem(T item) //Первый метод для добавления элемента
         {
+            if (item == null) //Если добавляемый элемент пустой, то ничего не добавляем и просто прекращаем работу метода
+            {
+                throw new Exception("Невозможно добавить пустой элемент");
+            }
+            if (tableValue.Contains(item)) //Нельзя добавлять элемент точно с такими же параметрами
+            {
+                throw new Exception($"Такой элемент уже есть: \n{item.ToString()} \nОн добавлен не будет");
+            }
             if ((double)Count / Capacity > fillRatio) //Смотрим степень заполнения таблицы. Если соотношение количества и вместимости больше, чем изначально заданный коэффициент заполнения
             {
                 T[] temp = (T[])tableValue.Clone(); //Клонируем массив значений
@@ -190,10 +199,6 @@ namespace LAB_12_2
 
         public void AddData(T data) //Второй метод для добавления метода элемента
         {
-            if (data == null) //Если добавляемый элемент пустой, то ничего не добавляем и просто прекращаем работу метода
-            {
-                return;
-            }
             int index = GetIndex(data); //Находим индекс по которому должен находиться добавляемый элемент
             int current = index; //Создаём текущий индекс равный базовому
             if (tableValue[index] != null) //Если значение по начальному индексу не пустое (то есть произошла коллизия)

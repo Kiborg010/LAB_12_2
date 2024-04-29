@@ -93,10 +93,24 @@ namespace LAB_12_2
                 table.AddItem(carWithSameHashCodeOne); //carDouble нужен для того, чтобы добавить этот элемент два раза. Это нужно для того, чтобы было проще продемонстрировать удаление и поиск одинаковых элементов
                 while (table.Count != size - 1) //Заполняем таблицу, оставляя только одно свободное место для дублируемого элемента
                 {
-                    Car car = CreateCarWithRandomType(); //Создаём машину
-                    table.AddItem(car); //Добавляем машину
+                    try //try - для того, чтобы не получилось добавить машину с такими же данными
+                    {
+                        Car car = CreateCarWithRandomType(); //Создаём машину
+                        table.AddItem(car); //Добавляем машину
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
                 }
-                table.AddItem(carWithSameHashCodeTwo); //Добавляем последнюю продублированную машину
+                try //Если параметры у этой машины указать такими же, как у первой, то добавить не получится
+                {
+                    table.AddItem(carWithSameHashCodeTwo); //Добавляем последнюю продублированную машину
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
             }
             else if (size == 1) //Если же длина хэш-таблицы равна 1, то просто один элемент добавляем
             {
@@ -108,16 +122,16 @@ namespace LAB_12_2
         static Car TakeCarInformation(MyHashTable<Car> table) //Метод для заполнения информации о машине для поиска и удаления
         {
             int typeCar;
-            
-            Console.ForegroundColor = ConsoleColor.Red; 
+
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Исходная таблица: ");
             Console.ResetColor();
             table.Print(); //Выводим изначальную таблицу
             Console.WriteLine();
-            
+
             WriteTypesCars(); //Выводим типы машин, чтобы понять, что именно искать
             typeCar = CorrectInputInt(1, 4); //Получаем номер типа машины
-            
+
             Console.Write("Введите бренд: "); //Собираем базовую информацию о машине
             string brend = Console.ReadLine();
             Console.WriteLine("Введите год: ");
@@ -130,7 +144,7 @@ namespace LAB_12_2
             int clearance = CorrectInputInt(1, 200);
             Console.WriteLine("Введите id: ");
             int id = CorrectInputInt(1, 1000000);
-            
+
             Car car = new Car(); //Инициализируем машину для поиска
             if (typeCar == 1) //В зависимости от типа машины спрашиваем дополнительную информацию и полностью заполняем машину для поиска
             {
@@ -176,8 +190,8 @@ namespace LAB_12_2
 
         static void Main(string[] args)
         {
-            WriteCommandsBegin(); 
-            int numberAnswerOne = -1; 
+            WriteCommandsBegin();
+            int numberAnswerOne = -1;
             MyHashTable<Car> table = new MyHashTable<Car>(0);
             int numberCar = 1;
             int size = 0;

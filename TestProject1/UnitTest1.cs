@@ -48,7 +48,34 @@ namespace TestProject1
         {
             MyHashTable<Car> table = new MyHashTable<Car>(1, 1);
             Car car1 = null;
+            string msg = "";
+            try
+            {
+                table.AddItem(car1);
+            }
+            catch (Exception ex)
+            {
+                msg = ex.Message;
+            }
+            Assert.AreEqual("Невозможно добавить пустой элемент", msg);
+        }
+
+        [TestMethod]
+        public void AddSameElements() //Добавление двух одинаковых элементов
+        {
+            MyHashTable<Car> table = new MyHashTable<Car>(2, 1);
+            Car car1 = new Car("1", 2000, "1", 1, 1, 1);
+            string msg = "";
             table.AddItem(car1);
+            try
+            {
+                table.AddItem(car1);
+            }
+            catch (Exception ex)
+            {
+                msg = ex.Message;
+            }
+            Assert.AreEqual($"Такой элемент уже есть: \n{car1.ToString()} \nОн добавлен не будет", msg);
         }
 
         [TestMethod]
